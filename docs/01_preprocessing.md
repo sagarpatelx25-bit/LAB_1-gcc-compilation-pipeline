@@ -2,6 +2,18 @@
 
 The preprocessor is the initial pass in the GCC compilation pipeline. It functions purely as a textual stream transformer before any semantic parsing or syntax validation occurs.
 
+---
+
+## Terminal Execution & Output
+```bash
+gcc -E src/main.c -o main.i
+head -n 30 main.i
+```
+
+![Stage 1 Preprocessing Output](assets/screenshots/02_step2_preprocessing_gcc_E.png)
+
+---
+
 ## Key Transformations
 
 1. **Header Inclusion (`#include`)**
@@ -26,10 +38,3 @@ The preprocessor is the initial pass in the GCC compilation pipeline. It functio
      - `2`: Returning to a file after an inclusion has concluded.
      - `3`: The following text comes from a system header file.
      - `4`: The following text should be treated as wrapped in an implicit `extern "C"` block.
-
-## Shell Execution
-
-```bash
-gcc -E src/main.c -o main.i
-head -n 30 main.i
-```

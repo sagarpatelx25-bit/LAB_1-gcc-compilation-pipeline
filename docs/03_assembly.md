@@ -2,6 +2,18 @@
 
 The assembler takes the human-readable assembly instructions (`.s`) and converts them into machine code, packaging the result into an ELF (Executable and Linkable Format) Relocatable Object File (`.o`).
 
+---
+
+## Terminal Execution & Output
+```bash
+gcc -c main.s -o main.o
+objdump -d main.o
+```
+
+![Stage 3 Assembly & Disassembly Output](assets/screenshots/04_step4_assembly_objdump.png)
+
+---
+
 ## Machine Code Opcode Anatomy
 
 | Offset | Raw Machine Bytes | Mnemonic Instruction | Technical Explanation |
@@ -16,6 +28,8 @@ The assembler takes the human-readable assembly instructions (`.s`) and converts
 | `1c` | `b8 00 00 00 00` | `mov $0x0,%eax` | Sets return value to `0`. |
 | `21` | `5d` | `pop %rbp` | 1-byte opcode restoring the caller frame pointer. |
 | `22` | `c3` | `ret` | 1-byte opcode popping return address into `%rip`. |
+
+---
 
 ## Relocation Entries in Relocatable Objects
 Inspecting relocations using `readelf -r main.o`:

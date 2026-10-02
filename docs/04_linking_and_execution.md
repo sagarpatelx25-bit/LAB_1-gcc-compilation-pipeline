@@ -4,7 +4,26 @@ The linker (`ld`) performs the final stage of compilation, combining relocatable
 
 ---
 
-## 1. What the Linker Accomplishes
+## 1. Terminal Execution & Output
+
+### Step 5: Linking & Binary Identification
+```bash
+gcc main.o -o main
+file main
+```
+
+![Stage 4 Linking and Binary File Verification](assets/screenshots/05_step5_linking_file_info.png)
+
+### Step 6: Program Execution
+```bash
+./main
+```
+
+![Stage 5 Program Execution](assets/screenshots/06_step6_execution_output.png)
+
+---
+
+## 2. What the Linker Accomplishes
 
 ### A. Symbol Resolution
 The object file `main.o` contains an undefined reference to `printf` (`U printf` in `nm` output). The linker searches standard libraries (primarily `libc.so.6`) to ensure every referenced symbol is defined.
@@ -25,7 +44,7 @@ The true entry point of a Linux ELF executable is NOT `main()`, but `_start` (pr
 
 ---
 
-## 2. Kernel Binary Loading & Execution Lifecycle
+## 3. Kernel Binary Loading & Execution Lifecycle
 
 ```
 [User runs ./main]

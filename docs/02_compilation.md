@@ -2,6 +2,18 @@
 
 The compilation phase takes the preprocessed `.i` stream, performs semantic analysis, parses it into an Abstract Syntax Tree (AST), lowers it to intermediate representations (GIMPLE and RTL), and emits target assembly language (`.s`).
 
+---
+
+## Terminal Execution & Output
+```bash
+gcc -S main.i -o main.s
+head -n 30 main.s
+```
+
+![Stage 2 Assembly Generation](assets/screenshots/03_step3_compilation_gcc_S.png)
+
+---
+
 ## Line-by-Line Instruction Dissection
 
 | Assembly Directive / Mnemonic | Purpose & Systems Context |
@@ -18,6 +30,8 @@ The compilation phase takes the preprocessed `.i` stream, performs semantic anal
 | `movl $0, %eax` | Sets the return value of `main` (`return 0;`) in the accumulator register `%rax`. |
 | `popq %rbp` | Restores the caller's frame pointer. |
 | `ret` | Pops the return address off the stack and jumps back to the caller (`__libc_start_main`). |
+
+---
 
 ## System V AMD64 Calling Convention Reference
 - **Integer/Pointer Arguments**: `%rdi` (1st), `%rsi` (2nd), `%rdx` (3rd), `%rcx` (4th), `%r8` (5th), `%r9` (6th).
