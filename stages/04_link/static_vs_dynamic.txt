@@ -1,0 +1,17 @@
+=============================================================================
+Static vs Dynamic Linking Analysis: GCC Output Metrics
+=============================================================================
+
+1. Dynamically Linked Executable (gcc main.o -o main)
+- Binary Size: ~16 KB
+- Dynamic Linker Interpreter: /lib64/ld-linux-x86-64.so.2
+- Shared Dependencies (ldd main):
+    linux-vdso.so.1 (0x00007ffff7fc5000)
+    libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007ffff7da2000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007ffff7fc7000)
+
+2. Statically Linked Executable (gcc -static main.o -o main_static)
+- Binary Size: ~900 KB (Contains full embedded libc runtime)
+- Dynamic Linker Interpreter: None (statically mapped by Linux kernel)
+- Shared Dependencies (ldd main_static):
+    not a dynamic executable
