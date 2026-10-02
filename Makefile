@@ -3,38 +3,52 @@ CFLAGS ?= -Wall -Wextra -O0
 SRC_DIR = src
 SRC = $(SRC_DIR)/main.c
 
-# Final target
+# Multi-file sources
+MULTI_SRCS = $(SRC_DIR)/demo_multi.c $(SRC_DIR)/math_utils.c
+MULTI_OBJS = demo_multi.o math_utils.o
+
+# Default target
 all: main
 
-# Step 1: Preprocessing (-E)
-# Expands #include, evaluates #define macros, strips comments, inserts linemarkers
-preprocess: main.i
+# ==============================================================================
+# Single-File Pipeline Stages (PDF Guide Walkthrough)
+# ==============================================================================
 
+# Step 1: Preprocessing (-E)
+preprocess: main.i
 main.i: $(SRC)
 	$(CC) -E $(SRC) -o $@
 
-# Step 2: Compilation to Assembly (-S)
-# Translates preprocessed C tokens into x86-64 assembly in AT&T syntax
+# Step 2: Compilation (-S)
 compile: main.s
-
 main.s: main.i
 	$(CC) -S main.i -o $@
 
-# Step 3: Assembler to Relocatable Object (-c)
-# Converts assembly mnemonics into ELF64 machine code object file
+# Step 3: Assembly (-c)
 assemble: main.o
-
 main.o: main.s
 	$(CC) -c main.s -o $@
 
-# Step 4: Linking into Final Executable
-# Resolves external symbols (printf via libc.so.6) and binds dynamic interpreter
+# Step 4: Linking
 link: main
-
 main: main.o
 	$(CC) main.o -o $@
 
-# Inspection targets
+# ==============================================================================
+# Multi-Object Compilation & Linking Demo
+# ==============================================================================
+multi: $(MULTI_OBJS)
+	$(CC) $(MULTI_OBJS) -o main_multi
+
+math_utils.o: $(SRC_DIR)/math_utils.c $(SRC_DIR)/math_utils.h
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/math_utils.c -o $@
+
+demo_multi.o: $(SRC_DIR)/demo_multi.c $(SRC_DIR)/math_utils.h
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/demo_multi.c -o $@
+
+# ==============================================================================
+# Inspection & Diagnostics
+# ==============================================================================
 disasm: main.o
 	@echo "--- Disassembly (AT&T syntax) ---"
 	objdump -d main.o
@@ -44,16 +58,18 @@ disasm-intel: main.o
 	objdump -d -M intel main.o
 
 inspect-elf: main
-	@echo "=== ELF Header ==="
-	readelf -h main | head -n 15
-	@echo "\n=== Program Interpreter ==="
-	readelf -l main | grep -E "interpreter|INTERP"
+	@bash scripts/inspect_elf.sh main
 
 run: main
-	@echo "Executing ./main:"
+	@echo "Executing single-file binary:"
 	@./main
+
+run-multi: multi
+	@echo "Executing multi-module binary:"
+	@./main_multi
 
 clean:
 	rm -f main.i main.s main.o main
+	rm -f $(MULTI_OBJS) main_multi
 
-.PHONY: all preprocess compile assemble link disasm disasm-intel inspect-elf run clean
+.PHONY: all preprocess compile assemble link multi disasm disasm-intel inspect-elf run run-multi clean
