@@ -1,0 +1,18 @@
+=============================================================================
+GCC Optimization Level Comparison: -O0 vs -O2 vs -O3
+=============================================================================
+
+1. Unoptimized (-O0)
+- Preserves full stack frame allocation (push %rbp, mov %rsp, %rbp).
+- Spills all variables to the stack; zero register caching.
+- Emits redundant loads and stores to ensure flawless debugging with GDB.
+
+2. Optimized (-O2)
+- Omits frame pointer (%rbp) when not needed (-fomit-frame-pointer).
+- Promotes local variables directly into registers (%ebx, %r12-%r15).
+- Performs common subexpression elimination, constant folding, and dead code elimination.
+
+3. Aggressively Optimized (-O3)
+- Enables loop unrolling and function inlining (-finline-functions).
+- Emits vector SIMD instructions (AVX2 / SSE4) when vectorization heuristics pass.
+- Trades binary size expansion for maximum CPU pipeline throughput.
