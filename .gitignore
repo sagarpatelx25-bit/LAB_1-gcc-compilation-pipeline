@@ -1,0 +1,16 @@
+# Compiled binaries, object files, and intermediate artifacts
+*.o
+*.i
+*.s
+main
+main_multi
+build/
+bin/
+
+# Editor and OS metadata
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
